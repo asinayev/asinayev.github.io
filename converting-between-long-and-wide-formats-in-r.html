@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>myblog</title>
+        <title>Converting Between Long and Wide Formats in R</title>
         <link rel="stylesheet" href="/theme/css/main.css" />
 
         <!--[if IE]>
@@ -14,14 +14,19 @@
         <header id="banner" class="body">
                 <h1><a href="/">myblog </a></h1>
                 <nav><ul>
-                    <li><a href="/category/r.html">R</a></li>
+                    <li class="active"><a href="/category/r.html">R</a></li>
                     <li><a href="/category/review.html">Review</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/converting-between-long-and-wide-formats-in-r.html" rel="bookmark"
+           title="Permalink to Converting Between Long and Wide Formats in R">Converting Between Long and Wide Formats in R</a></h1>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/converting-between-long-and-wide-formats-in-r.html">Converting Between Long and Wide Formats in R</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2015-12-14T16:27:00-05:00">
                 Published: Mon 14 December 2015
@@ -36,7 +41,7 @@
         </address>
 <p>In <a href="/category/r.html">R</a>.</p>
 <p>tags: <a href="/tag/tidyr.html">tidyr</a> <a href="/tag/long.html">long</a> <a href="/tag/wide.html">wide</a> <a href="/tag/data-manipulation.html">data manipulation</a> </p>
-</footer><!-- /.post-info --><p>Many applications require dealing with grouped observations. However, there are multiple ways of representing this type of data, namely long and wide. Multiple methods in R offer to convert a dataset from the wide to the long format and vice-versa. In this post, I show some necessary checks for converting from one format to another and I comment on which methods I think are best and which format I think is best.</p>
+</footer><!-- /.post-info -->      <p>Many applications require dealing with grouped observations. However, there are multiple ways of representing this type of data, namely long and wide. Multiple methods in R offer to convert a dataset from the wide to the long format and vice-versa. In this post, I show some necessary checks for converting from one format to another and I comment on which methods I think are best and which format I think is best.</p>
 <p>The main difference is that in the <strong>wide</strong> format, you have one row per group but you have multiple columns, representing the multiple observations.  In the <strong>long</strong> format, you have one row per observation and an additional variable that indicates what group the observation belongs to.</p>
 <p>For example, take the <code>InstEval</code> dataset in the <code>lme4</code> package in <code>R</code>. According to the documentation, it is </p>
 <blockquote>
@@ -113,14 +118,11 @@ lmer(y~(1+service|s), newlong)</code></p>
 <p>Our dataset is ready for <code>lmer</code> type models again!</p>
 <p><em>Technical note: This version of the gather package takes string names of the variables. Alternatively, <code>gather</code> would take the actual names (wouldn't use quotes). In this case that's not appropriate because 1:2972 would evaluate to a sequence of numbers, not variable names.</em></p>
 <h1>Concluding Remarks</h1>
-<p>The wide format is better for storage in cases where it is not sparse, and in cases a lot of the data is on the level of that group. However, I generally recommend the long format if the size of the dataset is not an issue. This is because the long format can always accomodate the information available in a wide format, but it can also accomodate data in which the observations can be grouped in multiple (more than two) ways and data that includes covariates on more than one group.</p>                </article>
-            </aside><!-- /#featured -->
-                </ol><!-- /#posts-list -->
-<p class="paginator">
-    Page 1 / 2
-        <a href="/index2.html">&raquo;</a>
-</p>
-                </section><!-- /#content -->
+<p>The wide format is better for storage in cases where it is not sparse, and in cases a lot of the data is on the level of that group. However, I generally recommend the long format if the size of the dataset is not an issue. This is because the long format can always accomodate the information available in a wide format, but it can also accomodate data in which the observations can be grouped in multiple (more than two) ways and data that includes covariates on more than one group.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>blogroll</h2>

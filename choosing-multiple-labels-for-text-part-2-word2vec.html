@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+        <title>Choosing Multiple Labels for Text, Part 2: Word2Vec.</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">Aleksandr Sinayev <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="/pages/converting-between-long-and-wide-formats-in-r.html">Converting Between Long and Wide Formats in R</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/choosing-multiple-labels-for-text-part-2-word2vec.html" rel="bookmark"
+                   title="Permalink to Choosing Multiple Labels for Text, Part 2: Word2Vec.">Choosing Multiple Labels for Text, Part 2: Word2Vec.</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2015-12-18T16:27:00-05:00">
+                Fri 18 December 2015
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/aleksandr-sinayev.html"> Aleksandr Sinayev</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>In part 1, I used random forests trained on this dataset to label the questions. However, this approach failed to label many of the questions. For example, the random forests could not find a label for the question "Will the United Nations General Assembly recognize a Palestinian state by 30 September 2011?". Of the available labels, one potentially good label for this question is "Israel" since crude oil is a commonly traded commodity. However, the association between crude oil and commodities is absent in the training dataset. One possible solution to this is to use a pre-trained model that has learned many associations.</p>
+<p>Luckily, Google has recently trained a Word2Vec <a href="https://code.google.com/p/word2vec/">model</a> on a giant corpus of news articles. Word2Vec models are neural networks that use a corpus to create vector representations of words, such that words that co-occur frequently will have similar vectors and words that co-occur infrequently will have different vectors. These vectors have nice properties. For example, adding and subtracting them should give you sensible results (e.g., king - man + woman = queen). The vectors are intended to store the meaning of the words, with meaning operationalized as co-occurrence.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">Word2Vec</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="o">.</span><span class="n">load_word2vec_format</span><span class="p">(</span> <span class="s">&#39;GoogleNews-vectors-negative300.bin.gz&#39;</span><span class="p">,</span><span class="n">binary</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a list of terms that are represented in the model from a sentence&quot;&quot;&quot;</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&#39;[</span><span class="si">%s</span><span class="s">]&#39;</span> <span class="o">%</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">))</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+    <span class="n">cleans</span> <span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span> 
+            <span class="n">cleans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">t</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span> 
+            <span class="n">cleans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
+            <span class="n">cleans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">clean</span><span class="p">(</span><span class="n">token</span><span class="p">):</span> <span class="n">cleans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clean</span><span class="p">(</span><span class="n">token</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">cleans</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">cleans</span> <span class="k">if</span> <span class="n">w</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s">&quot;english&quot;</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">cleans</span>
+
+<span class="k">def</span> <span class="nf">model_similarity</span> <span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">,</span> <span class="n">l1neg</span><span class="o">=</span><span class="p">[],</span> <span class="n">l2neg</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;finds the similarity according to a model of two lists of words</span>
+<span class="sd">    also accepts &#39;negative&#39; lists for analogies.&quot;&quot;&quot;</span>
+    <span class="n">list1sum</span><span class="o">=</span><span class="nb">sum</span><span class="p">([</span><span class="n">model</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">list1</span><span class="p">])</span>
+    <span class="n">list2sum</span><span class="o">=</span><span class="nb">sum</span><span class="p">([</span><span class="n">model</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">list2</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">l1neg</span><span class="p">:</span> <span class="n">list1sum</span> <span class="o">-=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">model</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">l1neg</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">l2neg</span><span class="p">:</span> <span class="n">list1sum</span> <span class="o">-=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">model</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">l2neg</span><span class="p">])</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="o">-</span><span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">cosine</span><span class="p">(</span><span class="n">list1sum</span><span class="p">,</span><span class="n">list2sum</span><span class="p">)</span>
+
+<span class="n">model_similarity</span><span class="p">(</span><span class="n">clean</span><span class="p">(</span><span class="s">&#39;king woman&#39;</span><span class="p">),</span><span class="n">clean</span><span class="p">(</span><span class="s">&#39;queen&#39;</span><span class="p">),</span> <span class="n">l1neg</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;man&#39;</span><span class="p">])</span>
+<span class="mf">0.71181934779762868</span>
+</pre></div>
+
+
+<p>The similarity between king+woman-man and queen is quite high, so the model appears to be working. The idea is to use this tool to select, for a particular piece of text, one or more topics from a list by assessing the similarity between the text and the topic. First, we can add up the vectors for all the words in a question, then compare the resulting vector to each of the topic vectors. If the similarity is high enough, we can conclude that that label is appropriate.</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">pandas</span>
+<span class="n">ifps</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">&#39;ifps.csv&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">flatten</span> <span class="p">(</span><span class="n">l</span><span class="p">):</span> 
+    <span class="sd">&quot;&quot;&quot; flatten a list of lists &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">l</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">union</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; returns the union of two lists &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+<span class="c">#Get a list of all the possible tags</span>
+<span class="n">tags</span> <span class="o">=</span> <span class="n">ifps</span><span class="p">[</span><span class="s">&#39;tags&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">tags</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="n">tags</span><span class="p">)))</span>
+<span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">clean</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">clean</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span>
+
+<span class="n">sims1</span> <span class="o">=</span> <span class="p">[[</span><span class="n">model_similarity</span><span class="p">(</span><span class="n">clean</span><span class="p">(</span><span class="n">q</span><span class="p">),</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">ifps</span><span class="p">[</span><span class="s">&#39;q_text&#39;</span><span class="p">]]</span>
+<span class="c">#a list of lists of similarities of each question to each label. Each outside list corresponds to a question. Each inside list corresponds to a label.</span>
+<span class="n">bigsims</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">l</span> <span class="k">if</span> <span class="n">e</span><span class="o">&gt;.</span><span class="mi">4</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">sims1</span><span class="p">]</span>
+<span class="c">#a list of list of indices of appropriate labels</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[[</span><span class="n">tags</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bigsims</span><span class="p">]</span>
+<span class="c">#a list of lists of appropriate labels</span>
+
+<span class="n">labels</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="p">[[</span><span class="s">&#39;Israel&#39;</span><span class="p">]]</span>
+</pre></div>
+
+
+<p>Now, we can see that the fourth article (in Python, 0 is first, so 3 is fourth) is labeled "Israel", which is an appropriate label. In fact, below you can see that about 65% of articles are labeled, almost double of what we had using random forests, so we can declare this a success.</p>
+<div class="highlight"><pre>len([l for l in labels if l])/float(len(labels))
+0.6434359805510534
+</pre></div>
+
+
+<h1>Conclusion</h1>
+<p>In these two blog posts, I showed how text can be given labels. The first used a supervised machine learning approach, in which the model learned from examples how to label data. The second used an unsupervised machine learning approach, in which a model trained on an external, unlabeled source was used to label text. The first approach is likely better if sufficient data are available. However, in this case, the second approach provided labels where the first failed to do so due to a small training set, and as a result was superior.</p>
+            </div><!-- /.entry-content -->
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+
+<h4>Pages</h4>
+
+ <ul>
+      <li><a href="/pages/converting-between-long-and-wide-formats-in-r.html">Converting Between Long and Wide Formats in R</a></li>
+  </ul>
+
+<h4>Categories</h4>
+<ul class="blank">
+		<li><a href="/category/python.html">Python</a></li>
+		<li><a href="/category/r.html">R</a></li>
+</ul>
+
+
+<h4>Tags</h4>
+	<ul class="blank">
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul class="blank">
+    <li><a href="#">You can add links in your config file</a></li>
+    <li><a href="#">Another social link</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>

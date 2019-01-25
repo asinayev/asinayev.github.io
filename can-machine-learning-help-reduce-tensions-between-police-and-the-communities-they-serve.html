@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>    Can Machine Learning Help Reduce Tensions between Police and the Communities They Serve?
+</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+            <link rel="stylesheet" href="./theme/css/normalize.css">
+        <link href='//fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="./theme/css/font-awesome.min.css">
+        <link rel="stylesheet" href="./theme/css/main.css">
+
+    <link rel="stylesheet" href="./theme/css/blog.css">
+    <link rel="stylesheet" href="./theme/css/github.css">
+        <script src="./theme/js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div id="wrapper">
+<header id="sidebar" class="side-shadow">
+    <hgroup id="site-header">
+        <a id="site-title" href="."><h1><i class="icon-bar-chart"></i> Aleks</h1></a>
+        <p id="site-desc"></p>
+    </hgroup>
+    <nav>
+        <ul id="nav-links">
+                <li><a href="./tag/blog.html">Blog</a></li>
+                <li><a href="./pages/contact">Contact</a></li>
+                <li><a href="./pages/bio">Bio</a></li>
+                <li><a href="./pdfs/resume.pdf">Resume</a></li>
+        </ul>
+    </nav>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1348.17">
+  <style type="text/css">
+  </style>
+</head>
+<body>
+</body>
+</html></header>
+    <div id="post-container">
+        <ol id="post-list">
+            <li>
+                <article class="post-entry">
+                    <header class="entry-header">
+                        <time class="post-time" datetime="2016-07-19T16:27:00-05:00" pubdate>
+                            Tue 19 July 2016
+                        </time>
+                        <a href="./can-machine-learning-help-reduce-tensions-between-police-and-the-communities-they-serve.html" rel="bookmark"><h1>Can Machine Learning Help Reduce Tensions between Police and the Communities They Serve?</h1></a>
+                    </header>
+
+                    <section class="post-content">
+                        <p>Campaign Zero, the police reform campaign proposed by Black Lives Matter activists, outlined <a href="http://www.joincampaignzero.org/solutions/">ten ways</a> governments can change policing regulations to meet their demands. The demand to end broken windows policing topped this list. Below, I will show an example of how machine learning algorithms can help curtail this kind of policing while keeping the number of criminals that could be caught but were allowed to walk to a minimum.</p>
+<h1>What's the Problem?</h1>
+<p>Put simply, too many innocent people are harassed by police. For example, Philandro Castile, the black man who was shot by police enforcement officers after a traffic stop, was accused of traffic violations on more than <a href="https://www.washingtonpost.com/national/stopped-52-times-by-police-was-it-racial-profiling/2016/07/09/81fe882a-4595-11e6-a76d-3550dba926ac_story.html">50 occasions</a> before the fatal stop. Many of these "violations" were things like improperly displaying a license plate. About half of them were dismissed outright.</p>
+<h2>What Does the Data Say?</h2>
+<p>One good thing that came out of the New York City's widely criticized stop and frisk policy is a <a href="http://www.nyc.gov/html/nypd/html/analysis_and_planning/stop_question_and_frisk_report.shtml">dataset</a> that allows us to examine trends like this one in the population at large. This dataset includes data for every stop. For each stop, the data can answer when and where the stop occurred, the reason for the stop, the characteristics of the suspect, and among many other data points, the outcome. In each of the twelve years for which these data are available, New Yorkers were stopped about half a million times, and nine out of ten stops were of completely innocent people. See the plot below for a breakdown by police precinct in 2015.</p>
+<p><img src="https://dl.dropboxusercontent.com/u/8059415/map.png" alt="map" style="width:500px;height:600px;" ></p>
+<h2>Making a Tradeoff</h2>
+<p>Although stopping innocent people is clearly a problem, police officers do have to stop many people in high-crime areas to make these areas safer. A bulge in a jacket is going to indicate nothing illicit nine times out of ten, but to make the neighborhood safe, it may be worth stopping ten people and upsetting nine of them so that you can stop the one person who is hiding an illegal gun. A tradeoff has to be made. Perhaps if this tradeoff was more favorable (if a police officer did not have to upset nine people in order to find the one with the gun), then a high level of crime enforcement could be achieved together with a small number of annoying, and likely discriminatory stops.</p>
+<h1>What's the Solution?</h1>
+<p>Machine learning to the rescue! In this case, the model might learn to predict whether the suspect was guilty of a crime as assessed by the police officer after the stop. Although this is far from a perfect measure of guilt, it is certainly a reasonable starting point. A machine learning model allows many variables to be used for predictions and can assess complex relationships between the variables. This allowed me to include a great variety of variables, for example, whether the month was January, and what the suspect was wearing. Because the model allows for complex relationships, it takes into account that although wearing a parka in January is perfectly normal, wearing a parka in June is suspicious (it may indicate the suspect is concealing a weapon). </p>
+<p>First, we need to read in the data.</p>
+<div class="highlight"><pre>sf <span class="o">=</span> read.csv<span class="p">(</span><span class="s">&#39;stopfrisk.csv&#39;</span><span class="p">,</span>header<span class="o">=</span><span class="bp">T</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Next, we add various time variables, such as the month, day of week and day of month.</p>
+<div class="highlight"><pre>sf<span class="o">$</span>datestop<span class="o">=</span><span class="kp">as.Date</span><span class="p">(</span><span class="kp">as.character</span><span class="p">(</span>sf<span class="o">$</span>datestop<span class="p">),</span> <span class="s">&#39;%m%d%Y&#39;</span><span class="p">)</span> <span class="c1">#read in the date</span>
+sf<span class="o">$</span>month <span class="o">=</span> <span class="kp">months</span><span class="p">(</span>sf<span class="o">$</span>datestop<span class="p">)</span>
+sf<span class="o">$</span>qtr <span class="o">=</span> <span class="kp">quarters</span><span class="p">(</span>sf<span class="o">$</span>datestop<span class="p">)</span>
+sf<span class="o">$</span>weekday <span class="o">=</span> <span class="kp">weekdays</span><span class="p">(</span>sf<span class="o">$</span>datestop<span class="p">)</span>
+sf<span class="o">$</span>monthday <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span><span class="kp">format</span><span class="p">(</span>sf<span class="o">$</span>datestop<span class="p">,</span> <span class="s">&quot;%d&quot;</span><span class="p">))</span>
+</pre></div>
+
+
+<p>Next, we build a matrix of predictors.</p>
+<div class="highlight"><pre>predicts <span class="o">=</span> sf<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="s">&#39;pct&#39;</span><span class="p">,</span><span class="s">&#39;timestop&#39;</span><span class="p">,</span><span class="s">&#39;city&#39;</span><span class="p">,</span><span class="s">&#39;sex&#39;</span><span class="p">,</span><span class="s">&#39;age&#39;</span><span class="p">,</span>
+<span class="s">&#39;agesq&#39;</span><span class="p">,</span><span class="s">&#39;height&#39;</span><span class="p">,</span><span class="s">&#39;weight&#39;</span><span class="p">,</span><span class="s">&#39;haircolor&#39;</span><span class="p">,</span><span class="s">&#39;build&#39;</span><span class="p">,</span><span class="s">&#39;inout&#39;</span><span class="p">,</span><span class="s">&#39;offunif&#39;</span><span class="p">)]</span>
+</pre></div>
+
+
+<p>In addition to these variables, we need to add reason for stop and additional circumstance variables. There are many of these, but they all start with 'ac' or 'cs.'</p>
+<div class="highlight"><pre>predicts <span class="o">=</span> <span class="kt">data.frame</span><span class="p">(</span>predicts<span class="p">,</span> sf<span class="p">[</span><span class="kp">substr</span><span class="p">(</span><span class="kp">names</span><span class="p">(</span>sf<span class="p">),</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span> <span class="o">%in%</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;ac&#39;</span><span class="p">,</span><span class="s">&#39;cs&#39;</span><span class="p">)])</span>
+predictsM <span class="o">=</span> model.matrix<span class="p">(</span>sf<span class="o">$</span>arstmade<span class="o">~</span><span class="m">.</span><span class="p">,</span> predicts<span class="p">)</span> <span class="c1">#Exclude rows where the predictors were missing and converts factors to numeric variables</span>
+DV <span class="o">=</span> sf<span class="o">$</span>arstmade<span class="p">[</span><span class="kp">as.numeric</span><span class="p">(</span><span class="kp">dimnames</span><span class="p">(</span>predictsM<span class="p">)[[</span><span class="m">1</span><span class="p">]])]</span> <span class="c1">#Use only observations for which none of the predictors were missing</span>
+</pre></div>
+
+
+<p>The most accurate model I found, as assessed by cross validation, was a <a href="https://xgboost.readthedocs.io/en/latest/">boosted gradient descent</a> model of decision trees. These parameters worked well after playing around for a little bit, but it is possible that better parameters are available.</p>
+<div class="highlight"><pre>test <span class="o">=</span> <span class="kp">sample</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="kp">length</span><span class="p">(</span>DV<span class="p">),</span> <span class="m">2000</span><span class="p">,</span> replace<span class="o">=</span><span class="bp">T</span><span class="p">)</span> <span class="c1">#test rows</span>
+train <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="kp">length</span><span class="p">(</span>DV<span class="p">)</span> <span class="o">%in%</span> test<span class="p">)</span> <span class="c1">#train rows</span>
+bst <span class="o">&lt;-</span> xgboost<span class="p">(</span>data <span class="o">=</span> predictsM<span class="p">[</span>train<span class="p">,],</span> label <span class="o">=</span> DV<span class="p">[</span>train<span class="p">],</span> 
+max.depth <span class="o">=</span> <span class="m">40</span><span class="p">,</span> eta <span class="o">=</span> <span class="m">.3</span><span class="p">,</span> lambda <span class="o">=</span> <span class="m">1</span><span class="p">,</span> nthread <span class="o">=</span> <span class="m">2</span><span class="p">,</span> alpha<span class="o">=</span><span class="m">.25</span><span class="p">,</span> nround <span class="o">=</span> <span class="m">40</span><span class="p">,</span> 
+objective <span class="o">=</span> <span class="s">&quot;binary:logistic&quot;</span><span class="p">,</span> verbose <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
+</pre></div>
+
+
+<h1>Results</h1>
+<div class="highlight"><pre><span class="o">&gt;</span> <span class="kp">table</span><span class="p">((</span>predict<span class="p">(</span>bst<span class="p">,</span> predictsM<span class="p">[</span>test<span class="p">,])</span><span class="o">&gt;</span><span class="m">.05</span> <span class="p">),</span> DV<span class="p">[</span>test<span class="p">])</span> <span class="c1">#.05 is an arbitrary threshold</span>
+
+         <span class="m">0</span>    <span class="m">1</span>
+<span class="kc">FALSE</span> <span class="m">1303</span>   <span class="m">66</span>
+<span class="kc">TRUE</span>   <span class="m">424</span>  <span class="m">207</span>
+</pre></div>
+
+
+<p>This table indicates that out of the 273 people who would be arrested if stopped, 207 (76%) were stopped. This is called recall. Out of the 1727 people who would not be arrested, only 424 (25%) were stopped, meaning the model had 75% precision. Let's see that breakdown by race.</p>
+<div class="highlight"><pre>plotd <span class="o">=</span> <span class="kp">with</span><span class="p">(</span>sf<span class="p">[</span>test<span class="p">,],</span> aggregate<span class="p">(</span>DV<span class="p">[</span>test<span class="p">],</span> <span class="kt">list</span><span class="p">(</span>DV<span class="p">[</span>test<span class="p">],</span> predict<span class="p">(</span>bst<span class="p">,</span> predictsM<span class="p">[</span>test<span class="p">,])</span><span class="o">&gt;</span><span class="m">.05</span><span class="p">,</span> sf<span class="o">$</span>race<span class="p">[</span>test<span class="p">]</span> <span class="p">),</span> length <span class="p">))</span>
+<span class="kp">names</span><span class="p">(</span>plotd<span class="p">)</span><span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;Guilty&quot;</span><span class="p">,</span><span class="s">&quot;Stopped&quot;</span><span class="p">,</span><span class="s">&quot;Race&quot;</span><span class="p">,</span><span class="s">&quot;Number&quot;</span><span class="p">)</span>
+races <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;Black&#39;</span><span class="p">,</span> <span class="s">&#39;Black\nHispanic&#39;</span><span class="p">,</span> <span class="s">&#39;White\nHispanic&#39;</span><span class="p">,</span> <span class="s">&#39;White&#39;</span><span class="p">,</span>
+<span class="s">&#39;Asian&#39;</span><span class="p">,</span> <span class="s">&#39;Native\nAmerican&#39;</span><span class="p">)</span>
+plotd<span class="o">$</span>Race <span class="o">=</span> races<span class="p">[</span>plotd<span class="o">$</span>Race<span class="p">]</span>
+plotd<span class="o">$</span>Stopped <span class="o">=</span> <span class="kp">ifelse</span><span class="p">(</span>plotd<span class="o">$</span>Stopped<span class="p">,</span> <span class="s">&quot;Yes&quot;</span><span class="p">,</span> <span class="s">&quot;No&quot;</span><span class="p">)</span>
+plotd<span class="o">$</span>Guilty <span class="o">=</span> <span class="kp">ifelse</span><span class="p">(</span>plotd<span class="o">$</span>Guilty<span class="o">&gt;</span><span class="m">0</span><span class="p">,</span> <span class="s">&quot;Yes&quot;</span><span class="p">,</span> <span class="s">&quot;No&quot;</span><span class="p">)</span>
+ggplot<span class="p">(</span>data<span class="o">=</span>plotd<span class="p">,</span> aes<span class="p">(</span>x<span class="o">=</span>Guilty<span class="p">,</span> y<span class="o">=</span>Number<span class="p">,</span> fill<span class="o">=</span>Stopped<span class="p">))</span> <span class="o">+</span>
+geom_bar<span class="p">(</span>stat<span class="o">=</span><span class="s">&quot;identity&quot;</span><span class="p">,</span> position<span class="o">=</span>position_dodge<span class="p">())</span><span class="o">+</span> facet_grid<span class="p">(</span><span class="m">.</span> <span class="o">~</span> Race<span class="p">)</span>
+</pre></div>
+
+
+<p><img src="https://dl.dropboxusercontent.com/u/8059415/Races.png" alt="map" style="width:800px;height:250px;" ></p>
+<p>Only about 220 innocent black people would be stopped if this policy was instituted, compared to about 1000 without it.</p>
+<p>Below, you will find a graphical representation of the model's results. If we set the model's decision criterion to .05, we find that the model is able to identify most guilty people, but stop much fewer innocents. Specifically, at this threshold, we can reduce the total number of innocent people stopped to only 25% of the original (that means for every 100 innocent New Yorkers that had to be stopped before, only 25 will have to be stopped if we use this tool) while still catching 76% of those who would ultimately be arrested. If we would like to make sure we catch almost all the criminals, we can decrease the threshold to .01. In this case, 59% of the original amount of innocent people would be stopped, but also 93% of those who would ultimately be arrested.</p>
+<iframe src="https://asinayev.shinyapps.io/racemodel/" style="border: none; width: 100%; height: 680px"></iframe>
+
+<h1>Why did it Work?</h1>
+<p>Although the algorithm does not directly output how much each feature contributed to making good predictions, we can assess this indirectly. One measure of feature importance compares the full model to how good it would have been if it did not have access to a specific feature. The most important features by this measure were time of stop, age of suspect, whether the stop occurred indoors or outdoors, the weight and height of the suspect, whether the officer was wearing a uniform, the reason for the stop, and circumstances like proximity to scene of offense.</p>
+<h1>Implementation</h1>
+<p>This algorithm can be implemented in an app to be used in patrol car computers or officers' smartphones. Given a clock and GPS tracking, many of the features can be automatically filled. The app would ask police officers to fill out other features (e.g., reason for stop, physical characteristics of suspect), then, based on the conclusions from the algorithm, it would indicate whether it is worthwhile to stop this suspect. Of course, in times of emergency, using such a tool may not be feasible. However, broken windows policing is not about times of emergency. Officers making routine stops often have plenty of time.</p>
+<h1>Gaming the Model</h1>
+<p>If this tool were implemented, it would be in a very high-stakes environment. Real criminals would have a lot to gain from understanding how it works. This specific machine learning model is more difficult to game than most because it includes interactions. It would be difficult for criminals to avoid being stopped by following simple rules like "don't wear loose clothing" because the model includes interactions between variables, as described. Nonetheless, sophisticated criminals may be able to game even a complex model like this one, perhaps through advanced knowledge of the algorithm. These kinds of criminals can still be apprehended if a stochastic element is added to the decision process. The model outputs the <em>probability</em> that somebody is guilty, rather than a decision, so the tool can give a recommendation based on this probability, rather than deterministically, based on a threshold. If people are stopped according to this probability, rather than according to a cutoff, as suggested above, gaming the model all the time would be nearly impossible. </p>
+                    </section>
+                    <hr/>
+                    <aside class="post-meta">
+                        <p>Category: <a href="./category/r.html">R</a></p>
+                        <p>Tags: <a href="./tag/machine-learning.html">machine learning</a>, <a href="./tag/blog.html">blog</a>, </p>
+                    </aside>
+                    <hr/>
+                </article>
+            </li>
+        </ol>
+    </div>
+        </div>
+
+        <script src="./theme/js/main.js"></script>
+    </body>
+</html>

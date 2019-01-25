@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>    Formatting Numeric Information
+        <title>    How Good is the Standard Deviation = Range Divided by Four Rule?
 </title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
@@ -58,20 +58,26 @@
             <li>
                 <article class="post-entry">
                     <header class="entry-header">
-                        <time class="post-time" datetime="2015-01-07T01:48:00-05:00" pubdate>
-                            Wed 07 January 2015
+                        <time class="post-time" datetime="2016-06-19T06:27:00-05:00" pubdate>
+                            Sun 19 June 2016
                         </time>
-                        <a href="./formatting-numeric-information.html" rel="bookmark"><h1>Formatting Numeric Information</h1></a>
+                        <a href="./how-good-is-the-standard-deviation-range-divided-by-four-rule.html" rel="bookmark"><h1>How Good is the Standard Deviation = Range Divided by Four Rule?</h1></a>
                     </header>
 
                     <section class="post-content">
-                        <p>Others have shown that people benefit from being shown numeric information, both because it increases their ability to understand information and because it increases desirable behaviors. In my own work, I was interested in how best to present numeric information. One large randomized trial showed that percentages (e.g., 10% chance) rather than frequencies (e.g., 10 out of 100 people) are best, especially when they are accompanied with descriptive labels (e.g., moderate risk). When drug side effect likelihoods were formatted this way, people correctly reported the information from a table 95% of the time (compared to 81% for other formats), and their willingness to take the drug increased to 3.3 from 2.9, on a 7 point scale. In another series of studies, I showed that it is the reference class that matters (10% of people vs. 10% chance matters), not the numeric format (10% of people vs. 10 of 100 people does not matter).</p>
-<p>Check out my <a href="https://dl.dropboxusercontent.com/u/8059415/percentandlabelpaper.pdf">paper</a> and <a href="https://dl.dropboxusercontent.com/u/8059415/Sinayev%20SJDM%202013%20Poster%20Final.pdf">poster</a> on this topic.</p>
+                        <p>Too lazy to calculate the standard deviation for some variable? A <a href="http://www.decisionsciencenews.com/2016/06/17/cant-compute-standard-deviation-head-divide-range-four/">recent blog post</a> suggests it might be a good idea to divide the range of the variable by four, and use that as an approximation. In simulations, this heuristics worked great for moderate sample sizes (25-70) of the beta distribution, with errors under 15%. But if you work with real data, you know that conclusions from simulated data sometimes don't apply. And besides, data are often not Beta distributed (the normal distribution is more common). The graphic below shows how this heuristic pans out for some real, freely available, datasets.</p>
+<iframe src="https://asinayev.shinyapps.io/rangeplots/" style="border: none; width: 100%; height: 680px"></iframe>
+
+<p>The heuristic works great for the first dataset. When there's only a slight skew and a small sample, it still does pretty well, with the error of the heuristic around 3-18% of the standard deviation. This is very much consistent with the simulations. </p>
+<p>However, data are often more strongly skewed. In this case, the heuristic can fall apart. For example the permeability of rocks dataset, which is positively skewed, has 26% error (although the miles per gallon of 1974 cars dataset, which was also skewed, had only 3% error). So it seems if there's skew in your data, you don't quite know what you're going to get with this heuristic.</p>
+<p>What happens for datasets with higher sample size? One dataset, which has temperatures in Nottingham, England, shows that as long as the data is well bounded (resembles a Beta distribution), the heuristic can do quite well. However, in the speed of light dataset, which is normally distributed, the percent error is 42% with a sample size of 100 (not far from what worked for the Beta distributions).</p>
+<p>The heuristic is completely ruined by the inclusion of outliers. The last few datasets, which are not cleaned for outliers all had very high error rates (35-81%).</p>
+<p>So the conclusion is: regardless of the sample size, be weary of simple heuristics, unless you know they work for the distribution of your variable.</p>
                     </section>
                     <hr/>
                     <aside class="post-meta">
-                        <p>Category: <a href="./category/projects.html">Projects</a></p>
-                        <p>Tags: <a href="./tag/projects.html">projects</a>, </p>
+                        <p>Category: <a href="./category/r.html">R</a></p>
+                        <p>Tags: <a href="./tag/data-analysis.html">data analysis</a>, <a href="./tag/blog.html">blog</a>, <a href="./tag/heuristics.html">heuristics</a>, </p>
                     </aside>
                     <hr/>
                 </article>

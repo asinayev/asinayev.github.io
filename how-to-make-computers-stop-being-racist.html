@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>    Choosing Multiple Labels for Text, Part 1: Random Forests
+        <title>    How to Make Computers Stop Being Racist
 </title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
@@ -58,19 +58,38 @@
             <li>
                 <article class="post-entry">
                     <header class="entry-header">
-                        <time class="post-time" datetime="2015-12-18T16:27:00-05:00" pubdate>
-                            Fri 18 December 2015
+                        <time class="post-time" datetime="2016-04-10T16:27:00-05:00" pubdate>
+                            Sun 10 April 2016
                         </time>
-                        <a href="./choosing-multiple-labels-for-text-part-1-random-forests.html" rel="bookmark"><h1>Choosing Multiple Labels for Text, Part 1: Random Forests</h1></a>
+                        <a href="./how-to-make-computers-stop-being-racist.html" rel="bookmark"><h1>How to Make Computers Stop Being Racist</h1></a>
                     </header>
 
                     <section class="post-content">
-                        <p>There are many ways to label text. In this post, I'm going to talk about applying one or more labels from a previously defined list to a piece of text using random forests in <code>R</code>.</p>
-<h1>The Set Up</h1>
-<p><a href="https://www.gjopen.com/">The Good Judgment Project</a> attempts to take advantage of <a href="https://en.wikipedia.org/wiki/Wisdom_of_the_crowd">crowd wisdom</a> to make geopolitical predictions. In it, people are asked to make predictions regarding various events. Previous research suggests retaining people who were most successful in earlier rounds for later rounds in order to hone in on a small but accurate group.</p>
-<p>However, people's expertise likely varies by domain. For example, just because I am good at predicting the next president of Nicaragua does not necessarily mean I know anything about whether Google's stock will surge or plummet. </p>
-<h1>The Problem</h1>
-<p>In order to take advantage of this heterogeneity, we need accurate labels for the topics of the events. People were asked questions about over 500 different events. Only about half of these were labeled. Here, I'll try to automatically label the other events.</p>
+                        <p>Can statistical models discriminate against a group of people without the intent 
+of the creator? Microsoft's recent experiment with the Twitter artificial intelligence 
+bot Tay suggests the answer is a firm yes. The bot was programmed to resemble an 
+impulsive teenager, but ended up denying the holocaust ever happened, while simultaneously 
+advocating a genocide of Mexicans. In an 
+<a href="http://www.fordfoundation.org/ideas/equals-change-blog/posts/can-computers-be-racist-big-data-inequality-and-discrimination/">article</a> 
+entitled "Can Computers Be Racist," Michael Brennan discussed how algorithms can 
+and do display preferences for certain groups in some depth and I will not go 
+farther into it.</p>
+<p>Instead, I am going to follow up and propose a possible solution. In short, I am 
+going to outline three possible ways statistical models can treat differences 
+between groups. The first is by explicitly taking advantage of them in order to 
+improve prediction. The second is by ignoring differences, but still giving 
+preferential results to certain groups. The third is by accounting for group 
+differences and giving the same results to people regardless of the group they 
+belong to.</p>
+<h1>The Example</h1>
+<p>Imagine we are trying to design a tool to help police officers identify criminal suspects more effectively, thereby reducing the need to stop innocent people. The goal would be to have the police officer enter some information about the suspect and the situation and have the algorithm provide the officer a decision: confront the person or not. In the best case scenario, if such a tool were highly accurate and neutral with respect to racial group, it could reduce the amount of needless stops and reduce frictions between police officers and the communities they serve. In the worst case scenario, if the tool takes advantage of the fact that there are higher rates of criminal incidence among racial minorities, it would result in more stops of people who belong to those racial minorities and increase tensions between police and the communities they serve.</p>
+<p>Fortunately, the New York Police Department releases troves of data about its stop and frisk campaign (cudos). Using these data, we can predict the likelihood for some person who is suspected of a crime to be arrested based on background characteristics, the officer's suspicions, the time and location of the confrontation etc..</p>
+<p>Note that what I am advocating here is a technique and not necesserily its use in this context. The specific tool that I am proposing could be easily gamed and what I am trying to predict here (whether a person is arrested) does not actually indicate guilt.</p>
+<h1>A First Approach</h1>
+<p>The first thing we could try is to make a model that includes a whole lot of variables (including demographics) and then make predictions using all these variables. Although it seems outrageous to use statistical models that explicitly include demographic characteristics to make impactful decisions, it is actually a common practice (thankfully not as frequently for historically disadvantaged groups). For example, insurance companies include gender, age, and marital status in assessing risk and therefore insurance payments.</p>
+<p>Specifically, I used the NYPD's data about stop and frisk to predict which confrontations resulted in arrests. As predictors, I used features of the confrontation (e.g., the time and place), features of the suspect (e.g., gender, race, age, height, weight, haircolor, build), the officer's reasons for confronting the suspect (e.g., suspicious bulge), whether the officer was in uniform and other circumstances (e.g.,   proximity to scene of a crime).</p>
+<p>Because there were so many variables, I used regularization to select the ones that were actually useful and because regularization introduces a hyper-parameter, I used cross-validation to select the best hyper-parameter.</p>
+<p>To validate the model, I left 1000 people suspected of a crime out for final evaluation. Of these 1000, 156 were arrested when confronted. Because no model can be perfect, some of these people who should be arrested will be missed. I set this percentage to 5%, meaning 8 people who would have been arrested would walk free. Using this criterion allowed 30.5% of people not to be stopped at all. The problem with this model was that </p>
 <h1>A Proposed Solution</h1>
 <p>The approach I discuss here is to use a machine learning algorithm to learn what characteristics of the labeled questions give them the topics that they have and extrapolate that to the unlableled questions. I will do this in <code>R</code> using the <code>tm</code> and <code>randomForest</code> packages. There will be a separate model for each label.</p>
 <div class="highlight"><pre>&gt; require(plyr)
@@ -170,7 +189,7 @@
                     <hr/>
                     <aside class="post-meta">
                         <p>Category: <a href="./category/r.html">R</a></p>
-                        <p>Tags: <a href="./tag/random-forests.html">random forests</a>, <a href="./tag/machine-learning.html">machine learning</a>, <a href="./tag/multilabel.html">multilabel</a>, <a href="./tag/blog.html">blog</a>, </p>
+                        <p>Tags: <a href="./tag/machine-learning.html">machine learning</a>, </p>
                     </aside>
                     <hr/>
                 </article>
